@@ -4,45 +4,46 @@
 param(
     [string]$Domain,
     [string]$User,
-    [string]$Password
+    [string]$Pass
 )
 
 Write-Host "=== Joining to domain: $Domain ==="
 
 try {
-    # Verify domain connectivity
     Write-Host "-> Checking connectivity to $Domain..."
     if (!(Test-Connection -ComputerName $Domain -Count 2 -Quiet)) {
         Write-Host "ERROR: Cannot reach domain $Domain"
-        Write-Host "Please verify DNS and network connectivity"
         exit 1
     }
     
     Write-Host "   Domain reachable"
     
-    # Convert password to secure string
-    $SecurePassword = ConvertTo-SecureString $Password -AsPlainText -Force
-    $Credentials = New-Object System.Management.Automation.PSCredential ($User, $SecurePassword)
+    $secpass = ConvertTo-SecureString $Pass -AsPlainText -Force
+    $cred = New-Object System.Management.Automation.PSCredential ($User, $secpass)
 
     Write-Host "-> Joining machine to domain $Domain..."
     
-    # Join domain
-    Add-Computer -DomainName $Domain -Credential $Credentials -Verbose -ErrorAction Stop
+    Add-Computer -DomainName $Domain -Credential $cred -Verbose -ErrorAction Stop
 
     Write-Host "   SUCCESS: Machine joined domain"
     Write-Host ""
-    Write-Host "IMPORTANT:"
-    Write-Host "   - Restart the machine manually"
-    Write-Host "   - After restart, run configure_openssh.ps1"
+    Write-Host "========================================"
+    Write-Host "NEXT STEPS (from your Linux machine):"
+    Write-Host "========================================"
+    Write-Host ""
+    Write-Host "1. Create users.txt file on Linux:"
+    Write-Host "   Format: username password (one per line)"
+    Write-Host "   Example: 601-20 felicidad"
+    Write-Host ""
+    Write-Host "2. Run profile creation script:"
+    Write-Host "   ./create_profiles.sh SAMDOM maquina ./users.txt"
+    Write-Host ""
+    Write-Host "Note: The users.txt file stays on Linux."
+    Write-Host "The script will process it and create users on Windows remotely."
     Write-Host ""
     exit 0
 }
 catch {
-    Write-Host "ERROR joining domain:"
-    Write-Host "   Message: $($_.Exception.Message)"
-    Write-Host "   Please verify:"
-    Write-Host "   1. Correct credentials"
-    Write-Host "   2. User has permissions to join computers"
-    Write-Host "   3. Machine is not already in the domain"
+    Write-Host "ERROR joining domain: $($_.Exception.Message)"
     exit 1
 }

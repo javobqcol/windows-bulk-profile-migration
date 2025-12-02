@@ -30,7 +30,6 @@ FILES=(
     "configure_openssh.ps1"
     "join_domain.ps1"
     "migrate_data.ps1"
-    "create_profiles.sh"
 )
 
 COPIED=0

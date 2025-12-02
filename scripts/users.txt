@@ -1,0 +1,13 @@
+601-22 chispa
+602-22 brillo
+603-22 nube
+604-22 viento
+605-22 microfono
+606-22 tren
+701-22 hoja
+702-22 ola
+703-22 piedra
+704-22 lago
+801-22 bosque
+802-22 rayo
+803-22 arena

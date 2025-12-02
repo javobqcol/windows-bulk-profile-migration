@@ -1,5 +1,5 @@
-# configure_openssh.ps1 - VERSIÓN CORREGIDA
-# Compatible con PowerShell 5.1 (Windows normal)
+# configure_openssh.ps1
+# Configure OpenSSH Server for domain user authentication
 
 Write-Host "=== Configuring OpenSSH for Domain Users ==="
 
@@ -26,16 +26,21 @@ foreach ($line in $OriginalContent) {
         continue
     }
     
+    # CRITICAL: Remove AuthorizedKeysFile restrictions
+    if ($line -match '^AuthorizedKeysFile') {
+        Write-Host "   Removing AuthorizedKeysFile restriction: $line"
+        Write-Host "   (Allows normal user authentication)"
+        continue
+    }
+    
     $NewContent += $line
 }
 
-# SOLUCIÓN 1: ASCII (seguro, compatible)
+# Save with ASCII encoding
 $NewContent | Out-File -FilePath $ConfigPath -Encoding ASCII
-Write-Host "-> Configuration updated (ASCII encoding)"
-
-# SOLUCIÓN 2: UTF-8 sin BOM manual (más elegante)
-# $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $false
-# [System.IO.File]::WriteAllLines($ConfigPath, $NewContent, $Utf8NoBomEncoding)
+Write-Host "-> Configuration updated"
+Write-Host "   Removed Match Group restrictions"
+Write-Host "   Removed AuthorizedKeysFile restrictions"
 
 # Restart service
 Write-Host "-> Restarting SSH service..."
@@ -48,3 +53,11 @@ try {
 }
 
 Write-Host "=== OpenSSH ready for domain users ==="
+Write-Host ""
+Write-Host "NEXT: Join machine to domain"
+Write-Host "Command:"
+Write-Host "sshpass -p '0lucr4d0n' ssh estudiante@inem-23.local \"
+Write-Host "  \"powershell -ExecutionPolicy Bypass -File C:\\Windows\\Temp\\join_domain.ps1 \"
+Write-Host "  -Domain SAMDOM -User administrator -Pass 'PASSWORD_DEL_DOMINIO'\""
+Write-Host ""
+Write-Host "IMPORTANT: Use -ExecutionPolicy Bypass"
