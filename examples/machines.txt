@@ -1,0 +1,3 @@
+pc01.local
+pc02.local
+pc03.local

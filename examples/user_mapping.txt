@@ -1,0 +1,22 @@
+# User Mapping File
+# Format: local_username domain_username
+# Example: Maps local "alumno01" to domain "601-20"
+
+# Grade 6
+alumno01 601-20
+alumno02 602-20
+alumno03 603-20
+alumno04 604-20
+alumno05 605-20
+alumno06 606-20
+
+# Grade 7
+alumno07 701-20
+alumno08 702-20
+alumno09 703-20
+alumno10 704-20
+
+# Grade 8
+alumno11 801-20
+alumno12 802-20
+alumno13 803-20
