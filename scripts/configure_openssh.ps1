@@ -1,5 +1,5 @@
-# configure_openssh.ps1
-# Configure OpenSSH Server for domain user authentication
+# configure_openssh.ps1 - VERSIÓN CORREGIDA
+# Compatible con PowerShell 5.1 (Windows normal)
 
 Write-Host "=== Configuring OpenSSH for Domain Users ==="
 
@@ -29,9 +29,13 @@ foreach ($line in $OriginalContent) {
     $NewContent += $line
 }
 
-# Save with UTF-8 no BOM
-$NewContent | Out-File -FilePath $ConfigPath -Encoding UTF8NoBOM
-Write-Host "-> Configuration updated successfully"
+# SOLUCIÓN 1: ASCII (seguro, compatible)
+$NewContent | Out-File -FilePath $ConfigPath -Encoding ASCII
+Write-Host "-> Configuration updated (ASCII encoding)"
+
+# SOLUCIÓN 2: UTF-8 sin BOM manual (más elegante)
+# $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $false
+# [System.IO.File]::WriteAllLines($ConfigPath, $NewContent, $Utf8NoBomEncoding)
 
 # Restart service
 Write-Host "-> Restarting SSH service..."
